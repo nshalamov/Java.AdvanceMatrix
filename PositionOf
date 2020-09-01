@@ -1,0 +1,41 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class PositionOf {
+    public static void main(String[] args) { // After the lection from JAVA ADVANCED MAY, almost a copy of the lectors solution.
+        Scanner scan = new Scanner(System.in);
+        // dimensions of the matrix
+        int[] dimensions = Arrays.stream(scan.nextLine().split("\\s+"))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+        // initialization of the matrix
+        int[][] matrix = new int[dimensions[0]][dimensions[1]];
+        // filling the matrix
+        for (int i = 0; i < matrix.length; i++) {
+            int[] arr = Arrays.stream(scan.nextLine().split("\\s+"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+
+            matrix[i] = arr;
+        }
+
+        int n = Integer.parseInt(scan.nextLine());
+        boolean isFound = false;
+
+        // searching for the number
+        for (int r = 0; r < matrix.length; r++) {
+            for (int c = 0; c < matrix[r].length; c++) {
+                if (n == matrix[r][c]) {
+                    isFound = true;
+                    System.out.println(r + " " + c);
+                }
+            }
+        }
+
+        if (!isFound) {
+            System.out.println("not found");
+        }
+    }
+}
