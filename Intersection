@@ -1,0 +1,42 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Intersection {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        int m = Integer.parseInt(scan.nextLine());
+        int n = Integer.parseInt(scan.nextLine());
+
+        String[][] matrixOne = new String[m][n];
+        String[][] matrixTwo = new String[m][n];
+
+        for (int i = 0; i < m; i++) {
+            String[] arr = scan.nextLine().split("\\s+");
+            matrixOne[i] = arr;
+        }
+
+        for (int i = 0; i < m; i++) {
+            String[] arr = scan.nextLine().split("\\s+");
+            matrixTwo[i] = arr;
+        }
+
+        String[][] output = new String[m][n];
+
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (matrixOne[r][c].equals(matrixTwo[r][c])) {
+                    output[r][c] = matrixOne[r][c];
+                } else {
+                    output[r][c] = "*";
+                }
+            }
+        }
+
+        for (String[] strings : output) {
+            System.out.println(String.join(" ", strings));
+        }
+    }
+}
