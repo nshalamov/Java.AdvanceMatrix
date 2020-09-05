@@ -1,0 +1,56 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class DiagonalDifference {
+    public static void main(String[] args) { // Almost a copy from the lecture JAVA ADVANCE JANUARY 2020
+        Scanner scan = new Scanner(System.in);
+        int size = Integer.parseInt(scan.nextLine());
+
+        int[][] matrix = new int[size][size];
+
+        for (int i = 0; i < size; i++) {
+            matrix[i] = Arrays.stream(scan.nextLine().split("\\s+"))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+
+        }
+
+        int primarySum = calcPrimarySum(matrix);
+        int secondarySum = calcSecondarySum(matrix);
+
+        System.out.println(primarySum + " " + secondarySum);
+
+    }
+
+    private static int calcSecondarySum(int[][] matrix) { // Second diagonal is more complicated:
+        // rows and cols go in opposite directions -> here: rows decline, cols increase.
+        int sum = 0;
+
+        int col = 0;
+        for (int row = matrix.length - 1; row >= 0; row--) {
+            sum += matrix[row][col++];
+        }
+
+        return sum;
+    }
+
+    // There is a different solution for the method above:
+    // int row = matrix.lenght - 1, col = 0;
+    // while(row >= 0) {
+    //      sum += matrix[row][col]; // or sum += matrix[row--][col++]; not having the code below
+    //      row--;
+    //      col++;
+    // }
+
+    private static int calcPrimarySum(int[][] matrix) { // First diagonal is simple: rows and cols increment together.
+        int sum = 0;
+
+        for (int i = 0; i < matrix.length; i++) {
+            sum += matrix[i][i];
+        }
+
+        return sum;
+    }
+}
