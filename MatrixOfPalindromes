@@ -1,0 +1,41 @@
+package com.company;
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class MatrixOfPalindromes {
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        // Dimensions
+        int[] input = Arrays.stream(scan.nextLine().split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        int row = input[0];
+        int col = input[1];
+
+        String[][] matrix = new String[row][col];
+        // Double work, but for the clarity -> we fill the matrix with palindromes generated in the method 'generate'.
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                matrix[r][c] = generate(r, c);
+            }
+        }
+        // Double work, but for the clarity -> we go through the matrix and print every element of it.
+        for (int r = 0; r < row; r++) {
+            for (int c = 0; c < col; c++) {
+                System.out.print(matrix[r][c] + " ");
+            }
+            System.out.println();
+        }
+
+
+    }
+        // Should be a better way!
+    private static String generate(int r, int c) { // we take the indexes
+        char symbol13 = (char)(r + 97); // and we add the ASCII number of the first letter for the 1st and last elements.
+        char symbol2 = (char)(c + r + 97); // here for the 2nd element we also add the value of the r, so that it always
+        // starts with the same letter
+        return String.valueOf(symbol13) + symbol2 +symbol13;
+    }
+}
