@@ -1,0 +1,81 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class StringMatrixRotation { // My solution, kind of a ugly one, but I take it.
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+
+        String input = scan.nextLine();
+        int rotationDegree = Integer.parseInt(input.replaceAll("[^0-9]", "")); // Extract the numbers
+
+        String command = scan.nextLine();
+        int longestWord = Integer.MIN_VALUE; // We need it to know the col's length.
+        List<String> words = new ArrayList<>(); // To store the words.
+        while (!command.equals("END")) {
+            words.add(command);
+            if (command.length() > longestWord) { // Find the longest to know exactly the length of a col.
+                longestWord = command.length();
+            }
+
+            command = scan.nextLine();
+        }
+
+        // Rows are amount of words, cols are the longest word.
+        String[][] matrix = new String[words.size()][longestWord];
+
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < longestWord; col++) {
+                try { // When we are in bounds of a word we safe the letters.
+                    matrix[row][col] = String.valueOf(words.get(row).charAt(col));
+                } catch (Exception e) { // The rest of the fields we fill with single spaces.
+                    matrix[row][col] = " ";
+                }
+            }
+        }
+
+        int nettoDegree = rotationDegree % 360; // To solve 810 degrees cases.
+
+        switch (nettoDegree) {
+            case 0:
+            case 360:
+                printMatrix(matrix);
+                break;
+            case 90: // Different types of printing the matrix...
+                for (int c = 0; c < longestWord; c++) {
+                    for (int r = matrix.length - 1; r >= 0; r--) {
+                        System.out.print(matrix[r][c]);
+                    }
+                    System.out.println();
+                }
+                break;
+            case 180: // Another one
+                for (int r = matrix.length - 1; r >= 0; r--) {
+                    for (int c = longestWord - 1; c >= 0; c--) {
+                        System.out.print(matrix[r][c]);
+                    }
+                    System.out.println();
+                }
+                break;
+            case 270: // Another one
+                for (int c = longestWord - 1; c >= 0; c--) {
+                    for (int r = 0; r < matrix.length; r++) {
+                        System.out.print(matrix[r][c]);
+                    }
+                    System.out.println();
+                }
+                break;
+        }
+    }
+
+    private static void printMatrix(String[][] matrix) { // Simple printing without rotation
+        for (String[] strings : matrix) {
+            for (String string : strings) {
+                System.out.print(string);
+            }
+            System.out.println();
+        }
+    }
+}
