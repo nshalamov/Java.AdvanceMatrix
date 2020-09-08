@@ -1,0 +1,120 @@
+package com.company;
+
+import java.util.*;
+
+public class Crossfire {
+    public static void main(String[] args) { // One of the most difficult ones!
+        Scanner scan = new Scanner(System.in);
+        int[] dimensions = Arrays.stream(scan.nextLine().split("\\s+")) // Usual stuff
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        int m = dimensions[0];
+        int n = dimensions[1];
+
+        List<ArrayList<Integer>> matrix = new ArrayList<>(); // How we fill an ArrayList of ArrayLists of Integers..
+        int counter = 1;
+        for (int r = 0; r < m; r++) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for (int c = 0; c < n; c++) {
+                list.add(counter++);
+            }
+            matrix.add(list);
+        }
+
+        String command = scan.nextLine();
+
+        while (!command.equals("Nuke it from orbit")) {
+            String[] tokens = command.split("\\s+");
+            int row = Integer.parseInt(tokens[0]);
+            int col = Integer.parseInt(tokens[1]);
+            int radius = Integer.parseInt(tokens[2]);
+            // We check if our row has anything to do with matrix, because our method markFieldsHor is going to mark
+            // only horizontally.
+            if (row >= 0 && row < m) {
+                markFieldsHor(row, col, radius, matrix);
+            }
+            // Same here, we check if our column is touching our matrix.
+            if (col >= 0 && col < n) {
+                markFieldVer(row, col, radius, matrix);
+            }
+
+            m = matrix.size(); // We change the row-dimensions of the matrix in case it did change, otherwise we
+            // might go out of bounds.
+
+            // This is the deleting method.
+            matrixClean(matrix);
+            command = scan.nextLine();
+        }
+
+
+        for (ArrayList<Integer> integers : matrix) { // Simple print of the result. In my case the enhanced for-cycle
+            // was necessary for the performance purposes.
+            for (Integer integer : integers) {
+                System.out.print(integer + " ");
+            }
+            
+            System.out.println();
+        }
+    }
+
+    private static List<ArrayList<Integer>> matrixClean(List<ArrayList<Integer>> matrix) { // A tricky one by M. Paunov.
+        // We extract row by row and delete all the -1 elements using the API. 
+        for (int i = 0; i < matrix.size(); i++) {
+            ArrayList<Integer> row = matrix.get(i);
+            row.removeIf(e -> e == -1);
+            if (row.isEmpty()) { // If the extracted row is empty it gets deleted. i-- is necessary to do not get 
+                // out of bounds, because indexes shift after a remove operation is done. 
+                matrix.remove(i);
+                i--;
+            }
+        }
+
+        // This was my solution, but it not as fast as the one above and much more complicated in my eyes. 
+        //for (int i = 0; i < matrix.size(); i++) {
+        //    for (int j = 0; j < matrix.get(i).size(); j++) {
+        //        if (j >= 0 && j < matrix.get(i).size()) { //*
+        //            if (matrix.get(i).get(j) == -1) {
+        //                matrix.get(i).remove(j);
+        //                j--;
+        //            }
+        //
+        //            if (matrix.get(i).isEmpty()) {
+        //                matrix.remove(i);
+        //            }
+        //        }
+        //    }
+        //}
+
+        return matrix;
+    }
+
+    private static List<ArrayList<Integer>> markFieldVer
+            (int row, int col, int radius, List<ArrayList<Integer>> matrix) { // Vertical marking. 
+        int startIndex = row - radius;
+        int endIndex = row + radius;
+        for (int i = startIndex; i <= endIndex; i++) {
+            if (i >= 0 && i < matrix.size()) {
+                if (col < matrix.get(i).size()) { // This was the most difficult detail to find:
+                    // (col < matrix.get(i).size(), somehow it's tempting to check the i to the size of the column..
+                    matrix.get(i).set(col, -1);
+                }
+            }
+        }
+
+        return matrix;
+    }
+
+    private static List<ArrayList<Integer>> markFieldsHor
+            (int row, int col, int radius, List<ArrayList<Integer>> matrix) { // Horizontal marking
+        int startIndex = col - radius;
+        int endIndex = col + radius;
+        for (int i = startIndex; i <= endIndex; i++) { // Much more comfortable operation than the one above. 
+            if (i >= 0 && i < matrix.get(row).size()) {
+                matrix.get(row).set(i, -1);
+            }
+        }
+
+        return matrix;
+    }
+}
